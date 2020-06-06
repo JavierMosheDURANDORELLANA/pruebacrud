@@ -1,0 +1,144 @@
+=========Notas de inicialización============== es importante si se realizan configuración de archivos.json e instalación de dependencias
+no tener servido el angular.
+/tenemos que ibicarnos en el path de nuestro proyecto angular
+1. Crear proyecto de firebase en la pagina de firebase
+2. Crear proyecto angular ng new proyecto
+3. Instalar dependencias css y js
+    npm i bootstrap jquery
+4. vincular los path en angular.json/guardar y comprobar escribiendo html con estilos bootstrap como por ejemplo
+<button class="btn btn-lg btn-primary">javier</button> en el app.component.html
+5. Instalamos angular/fire para ello
+    Instalamos :
+    => npm install -g firebase-tools > Firebase CLI
+          Aseguremos que estemos logados aplicando el siguiente comando :> firebase login
+    => ng add @angular/fire > Las librerias de angularfire / aqui se instalan las librerias se actualizan el package.json y seleccionas tu proyecto de fire.
+    => npm i firebase > Instalamos firebase propiamente
+    ---------- Hasta aquí la configuración e instalación de dependencias-----------------
+=======================Notas en proyecto==============================
+1. Importamos en app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+
+// Importando firedependencies
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { environment } from '../environments/environment';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    // Importamos los modulos firebase
+    AngularFireModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+  ],
+  providers: [],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}
+2. Creamos el servicio ng g s modelo/persona
+3. Creamos el arreglo en la clase persona
+  export class Persona {
+  $keyregistro: string;
+  num_identificacion: string;
+  nombre: string;
+  apellido: string;
+  telefono: String;
+  direccion: string;
+
+}
+4. Creamos el servicio persona ng g s servicios/persona y aplicamos la importacion y creación de metodos
+import { Injectable } from '@angular/core';
+// Importamos la clase.
+import { Persona } from '../modelo/persona';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PersonaService {
+  // Ahora llamaremos a nuestra clase persona.
+  selectedPersona: Persona = new Persona();
+  personaList: AngularFireList<any>;
+  // Creamos una variable en el constructor para llamar a nuestra base de datos en firebase
+  constructor(private firebase: AngularFireDatabase) {}
+  // Creamos el metodo getPersona que se encargara de traer la información de la categoria persona desde la base de datos en firebase.
+  getPersona() {
+    return (this.personaList = this.firebase.list('persona'));
+  }
+  // metodo para insertar con parametros variable persona que llama la categoria
+  // ...persona que llama la clase Persona, el metodo push inserta a nuestra base de datos.
+  insertPersona(persona: Persona) {
+    this.personaList.push({
+      num_identificacion: persona.num_identificacion,
+      nombre: persona.nombre,
+      apellido: persona.apellido,
+      telefono: persona.telefono,
+      direccion: persona.direccion,
+    });
+  }
+  // Creamos el metodo modificar
+
+  Update(persona: Persona) {
+    this.personaList.update(persona.$keyregistro, {
+      num_identificacion: persona.num_identificacion,
+      nombre: persona.nombre,
+      apellido: persona.apellido,
+      telefono: persona.telefono,
+      direccion: persona.direccion,
+    });
+  }
+  // Creamos el metodo borrar
+
+  deletePersona($keyregistro: string) {
+    this.personaList.remove($keyregistro);
+  }
+}
+5. servimos el proyecto en su ubicacion ng serve
+6. Creamos 2 componentes (persona, personalist) en una carpeta contenedora component ng g c component/persona ng g c component/persona opc-- skipTests=true para evitar los spec
+7. colocamos sus selectectores y creamos una estrucura html en app.component.html
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <app-persona></app-persona>
+    </div>
+    <div class="col-md-6">
+      <app-personalist></app-personalist>
+    </div>
+  </div>
+</div>
+
+8. creamos la estructura de tabla en personalist component y el input con ngmodel
+<input type="text" class="form-control" id="buscar" [([(ngModel)]="buscar" )] />
+<table class="table">
+  <tr>
+    <td>$keyregistro</td>
+    <td>num_identificacion</td>
+    <td>nombre</td>
+    <td>apellido</td>
+    <td>telefono</td>
+    <td>direccion</td>
+  </tr>
+</table>
+9. importamos en app.module los forms
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';===ARRIBA====
+
+
+@NgModule({
+  declarations: [AppComponent, PersonaComponent, PersonalistComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    // Importamos los modulos firebase
+    AngularFireModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    // Importamos forms ==AQUI===
+    FormsModule,
+    ReactiveFormsModule,
+
+
+

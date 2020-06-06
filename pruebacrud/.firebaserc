@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "pruebacrud-35a82": {
+      "hosting": {
+        "pruebacrud": [
+          "pruebacrud-35a82"
+        ]
+      }
+    }
+  }
+}

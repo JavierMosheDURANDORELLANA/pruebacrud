@@ -1,0 +1,46 @@
+<div class="btn-group mt-4">
+  <input
+    type="text"
+    class="form-control"
+    id="buscar"
+    placeholder="buscar persona"
+    [(ngModel)]="buscar"
+  />
+  <button class="btn btn-danger" (click)="consulPersona()">consultar</button>
+</div>
+
+<table class="table table-bordered mt-4">
+  <tr>
+    <td class="bg-primary text-white">$keyregistro</td>
+    <td class="bg-primary text-white">num_identificacion</td>
+    <td class="bg-primary text-white">nombre</td>
+    <td class="bg-primary text-white">apellido</td>
+    <td class="bg-primary text-white">telefono</td>
+    <td class="bg-primary text-white">direccion</td>
+  </tr>
+  <tr *ngFor="let personalista of personaList">
+    <td>{{ personalista.num_identificacion }}</td>
+    <td>{{ personalista.nombre }}</td>
+    <td>{{ personalista.apellido }}</td>
+    <td>{{ personalista.telefono }}</td>
+    <td>{{ personalista.direccion }}</td>
+    <td>
+      <button
+        type="button"
+        (click)="onEdit(personalista)"
+        class="btn btn-outline-danger btn-sm"
+      >
+        Edit
+      </button>
+    </td>
+    <td>
+      <button
+        type="button"
+        (click)="onDelete(personalista.$keyRegistro)"
+        class="btn btn-outline-danger btn-sm"
+      >
+        Delete
+      </button>
+    </td>
+  </tr>
+</table>
